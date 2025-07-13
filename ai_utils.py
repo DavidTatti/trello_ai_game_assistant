@@ -15,6 +15,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
 
 # Ollama-specific optimizations
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_TEMPERATURE = float(os.getenv("OLLAMA_TEMPERATURE", "0.3"))
 OLLAMA_TOP_P = float(os.getenv("OLLAMA_TOP_P", "0.9"))
 OLLAMA_TOP_K = int(os.getenv("OLLAMA_TOP_K", "40"))
@@ -48,31 +49,71 @@ def ask_ollama(prompt):
     start_time = time.time()
     
     try:
-        # Model-specific optimizations for deepseek-r1
-        payload = {
-            "model": OLLAMA_MODEL,
-            "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": OLLAMA_TEMPERATURE,
-                "top_p": OLLAMA_TOP_P,
-                "top_k": OLLAMA_TOP_K,
-                "repeat_penalty": OLLAMA_REPEAT_PENALTY,
-                "num_predict": OLLAMA_MAX_TOKENS,
-                # deepseek-r1 specific optimizations
-                "num_ctx": 8192,  # Context window size
-                "num_gpu": 1,     # Use GPU if available
-                "num_thread": 8,  # Optimize threading
-                "rope_freq_base": 10000,  # Better for coding tasks
-                "rope_freq_scale": 0.5,
+        # Model-specific optimizations
+        if OLLAMA_MODEL.startswith("deepseek-r1"):
+            # deepseek-r1 specific optimizations (works for deepseek-r1, deepseek-r1:7b, deepseek-r1:3b, etc.)
+            payload = {
+                "model": OLLAMA_MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": OLLAMA_TEMPERATURE,
+                    "top_p": OLLAMA_TOP_P,
+                    "top_k": OLLAMA_TOP_K,
+                    "repeat_penalty": OLLAMA_REPEAT_PENALTY,
+                    "num_predict": OLLAMA_MAX_TOKENS,
+                    "num_ctx": 8192,  # Context window size
+                    "num_gpu": 1,     # Use GPU if available
+                    "num_thread": 8,  # Optimize threading
+                    "rope_freq_base": 10000,  # Better for coding tasks
+                    "rope_freq_scale": 0.5,
+                }
             }
-        }
+        elif OLLAMA_MODEL.startswith("llama3.2"):
+            # llama3.2 specific optimizations
+            payload = {
+                "model": OLLAMA_MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": OLLAMA_TEMPERATURE,
+                    "top_p": OLLAMA_TOP_P,
+                    "top_k": OLLAMA_TOP_K,
+                    "repeat_penalty": OLLAMA_REPEAT_PENALTY,
+                    "num_predict": OLLAMA_MAX_TOKENS,
+                    "num_ctx": 16384,  # Larger context window for llama3.2
+                    "num_gpu": 1,      # Use GPU if available
+                    "num_thread": 12,  # More threads for llama3.2
+                    "rope_freq_base": 500000,  # llama3.2 specific RoPE settings
+                    "rope_freq_scale": 1.0,
+                    "mirostat": 2,     # llama3.2 entropy sampling
+                    "mirostat_tau": 5.0,
+                    "mirostat_eta": 0.1,
+                }
+            }
+        else:
+            # Default optimizations for other models
+            payload = {
+                "model": OLLAMA_MODEL,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "temperature": OLLAMA_TEMPERATURE,
+                    "top_p": OLLAMA_TOP_P,
+                    "top_k": OLLAMA_TOP_K,
+                    "repeat_penalty": OLLAMA_REPEAT_PENALTY,
+                    "num_predict": OLLAMA_MAX_TOKENS,
+                    "num_ctx": 4096,   # Standard context window
+                    "num_gpu": 1,      # Use GPU if available
+                    "num_thread": 4,   # Standard threading
+                }
+            }
         
         # Add system prompt for better context
         payload["system"] = PROJECT_CONTEXT
-        
+        log_to_slack(f"🤖 Ollama Host: {OLLAMA_HOST}")
         response = requests.post(
-            "http://localhost:11434/api/generate", 
+            f"{OLLAMA_HOST}/api/generate", 
             json=payload,
             timeout=60  # Increased timeout for complex responses
         )

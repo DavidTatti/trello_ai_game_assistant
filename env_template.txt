@@ -5,7 +5,8 @@
 AI_PROVIDER=ollama
 
 # Ollama Configuration (for local AI)
-OLLAMA_MODEL=deepseek-r1
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=deepseek-r1  # Options: deepseek-r1, llama3.2, or other models
 
 # Ollama Optimization Parameters (for deepseek-r1)
 OLLAMA_TEMPERATURE=0.3
