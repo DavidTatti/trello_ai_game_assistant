@@ -12,6 +12,7 @@ This bot integrates with **Trello**, **Slack**, and **AI models** to automate in
 ✅ Posts AI-generated help as Trello comments  
 ✅ Sends a daily summary of active tasks to Slack at 9:30 AM  
 ✅ Supports both local AI (Ollama) and cloud AI (ChatGPT API)  
+✅ Queues webhook requests to prevent AI API overload  
 ✅ Runs offline using test cards and mock Trello data
 
 ---

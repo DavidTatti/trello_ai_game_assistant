@@ -73,7 +73,7 @@ def ask_ollama(prompt):
             # llama3.2 specific optimizations
             payload = {
                 "model": OLLAMA_MODEL,
-                "prompt": prompt,
+                "prompt": f"{PROJECT_CONTEXT}\n\n{prompt}",
                 "stream": False,
                 "options": {
                     "temperature": OLLAMA_TEMPERATURE,
@@ -109,8 +109,10 @@ def ask_ollama(prompt):
                 }
             }
         
-        # Add system prompt for better context
-        payload["system"] = PROJECT_CONTEXT
+        # Add system prompt for other models (deepseek-r1, etc.)
+        if not OLLAMA_MODEL.startswith("llama"):
+            payload["system"] = PROJECT_CONTEXT
+        
         log_to_slack(f"🤖 Ollama Host: {OLLAMA_HOST}")
         response = requests.post(
             f"{OLLAMA_HOST}/api/generate", 
