@@ -38,21 +38,44 @@ Get your API key from https://platform.openai.com/api-keys
 
 See [AI_CONFIGURATION.md](AI_CONFIGURATION.md) for detailed setup instructions.
 
-### Step 3: Start the Webhook Server listening to Trello changes:
+### Step 3: Register Trello Webhook
+
+Register a webhook for your "In Progress" list to automatically trigger the AI assistant:
+
+```bash
+python register_webhook.py
 ```
+
+This script will:
+- Find your "In Progress" list (supports various naming conventions)
+- Register a webhook that triggers on card changes and comments
+- Send webhooks to your server's `/webhook` endpoint
+
+**Required environment variables:**
+- `TRELLO_KEY` - Your Trello API key
+- `TRELLO_TOKEN` - Your Trello API token  
+- `TRELLO_BOARD_ID` - Your board ID
+- `WEBHOOK_URL` - Your server's webhook URL (e.g., `https://your-domain.com/webhook`)
+
+### Step 4: Start the Webhook Server
+
+Start the server to receive webhook notifications:
+```bash
 python app.py
 ```
-Or with a tunnel:
-```
+
+For local development with a tunnel:
+```bash
 npx localtunnel --port 5000
 ```
 #### Enable Daily Summary at 9:30 AM:
-```
+```bash
 crontab -e
-insert:
+# Insert this line:
 30 9 * * * /usr/bin/python3 /path/to/daily_summary.py >> /tmp/trello_summary.log 2>&1
 ```
-### Step 3 (Optional): Run tests
+
+### Step 5 (Optional): Run tests
 
 Test with Mock Webhooks locally:
 ```
@@ -63,7 +86,7 @@ To use offline card data instead of live API:
 ```
 MOCK_TRELLO=true
 ```
-### Step 4 (Optional): Compare different LLM outputs with Ollama
+### Step 6 (Optional): Compare different LLM outputs with Ollama
 
 Compare LLM Responses Across Models
 make compare         # macOS/Linux

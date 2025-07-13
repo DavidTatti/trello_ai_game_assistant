@@ -19,8 +19,16 @@ OLLAMA_MAX_TOKENS=2048
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_MODEL=gpt-3.5-turbo
 
-# Add your other existing environment variables below:
-# TRELLO_API_KEY=your_trello_api_key
-# TRELLO_TOKEN=your_trello_token
-# SLACK_WEBHOOK_URL=your_slack_webhook_url
-# MOCK_TRELLO=false 
+# Trello Configuration
+TRELLO_KEY=your_trello_api_key
+TRELLO_TOKEN=your_trello_token
+TRELLO_BOARD_ID=your_board_id
+
+# Webhook Configuration
+WEBHOOK_URL=https://your-domain.com/webhook
+
+# Slack Configuration
+SLACK_WEBHOOK_URL=your_slack_webhook_url
+
+# Other Configuration
+MOCK_TRELLO=false 

@@ -1,8 +1,12 @@
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Update if your local server is running on a different port
-WEBHOOK_URL = "http://localhost:5000/webhook"
+WEBHOOK_URL = os.getenv("WEBHOOK_URL") # "http://localhost:5000/webhook"
 
 def test_comment_card():
     payload = {
