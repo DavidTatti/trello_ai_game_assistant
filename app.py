@@ -36,11 +36,17 @@ def webhook_processor():
             try:
                 card_id = action['data']['card']['id']
                 card_name = action.get('data', {}).get('card', {}).get('name', 'Unknown')
+                card_desc = action.get('data', {}).get('card', {}).get('desc', '')
                 
                 log_to_slack(f"🔄 Processing queued webhook: {action_type} for card '{card_name}' (ID: {card_id})")
                 
                 # Fetch card data
                 card = fetch_card_data(card_id)
+                
+                # Enhance card data with webhook description if available
+                if card_desc and not card.get('desc'):
+                    card['desc'] = card_desc
+                    log_to_slack(f"📝 Enhanced card with webhook description for '{card_name}'")
                 
                 # Process the card update
                 process_card_update(card, action)
