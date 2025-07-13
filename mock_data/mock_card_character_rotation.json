@@ -1,0 +1,6 @@
+{
+  "id": "foo123",
+  "name": "Character Rotation is not smooth on client in multiplayer with dedicated server.",
+  "desc": "[Context]\nGameSystem: Settlement Mode\nMode: Battle\nSubsystem: Combat AI\n\nRotation should be smooth on Clients, all characters use the Character Movement component. Also in Battles and Sieges there are hundreds of characters fighting, so should work for that amount of characters.",
+  "url": "https://trello.com/c/foo123"
+} 

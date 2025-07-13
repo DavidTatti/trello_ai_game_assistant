@@ -14,7 +14,8 @@ LABEL_MAP_FILE = "label_map.json"
 MOCK_CARDS = {
     "abc123": "mock_card_dungeon.json",
     "def456": "mock_card_battle.json",
-    "ghi789": "mock_card_trade_ui.json"
+    "ghi789": "mock_card_trade_ui.json",
+    "foo123": "mock_card_character_rotation.json"
 }
 
 # Load label map if available
