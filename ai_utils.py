@@ -207,6 +207,14 @@ def process_card_update(card, action):
 Explain what the developer should do next in the context of Unreal Engine development. Keep it helpful, technical, and relevant.
 """
     reply = ask_ai(prompt)
+    
+    # Check if the AI response contains an error
+    if "ERROR:" in reply or "ERROR from" in reply:
+        error_msg = f"❌ AI Error for card '{name}': {reply}"
+        log_to_slack(error_msg)
+        print(error_msg)  # Also log to console for debugging
+        return  # Don't post error messages to Trello
+    
     signed_reply = f"[🤖 AI Reply]\n{reply}"
     log_to_slack(f"🤖 AI Reply: {reply}")
     comment_on_card(card_id, signed_reply)
