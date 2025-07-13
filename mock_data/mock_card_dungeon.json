@@ -1,0 +1,6 @@
+{
+  "id": "abc123",
+  "name": "Implement Boss Loot Chest Logic",
+  "desc": "[Context]\nGameSystem: Dungeon\nMode: Dungeon\nSubsystem: Loot\n\nWhen the boss dies in a Dungeon, a locked chest should spawn nearby with randomized loot based on dungeon tier. The player must open it manually. The loot should be randomized but tier-aware and the chest should only appear on boss death, not mini-bosses.",
+  "url": "https://trello.com/c/abc123"
+}

@@ -1,0 +1,6 @@
+{
+  "id": "ghi789",
+  "name": "Settlement Trade Interface – Quantity Adjuster",
+  "desc": "[Context]\nGameSystem: World Map\nSubsystem: UI / Economy\n\nAdd a numeric stepper or slider widget to the settlement trade UI. Players should be able to buy/sell in quantities (not just one at a time). Should validate against current inventory weight and caravan capacity.",
+  "url": "https://trello.com/c/ghi789"
+}

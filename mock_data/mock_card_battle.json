@@ -1,0 +1,6 @@
+{
+  "id": "def456",
+  "name": "Formation Hold Position Fix",
+  "desc": "[Context]\nGameSystem: Settlement Mode\nMode: Battle\nSubsystem: Combat AI\n\nCurrently, when the player uses 'Hold Position', the formation begins to drift or disband after 10 seconds. AI should retain their position indefinitely unless overridden by 'Advance', 'Follow Me', or 'Charge'. Behavior tree needs override logic for position lock.",
+  "url": "https://trello.com/c/def456"
+}
