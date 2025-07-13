@@ -59,13 +59,81 @@ def fetch_cards_from_list(list_id):
 
 def comment_on_card(card_id, message):
     url = f"https://api.trello.com/1/cards/{card_id}/actions/comments"
-    params = {
-        "key": TRELLO_KEY,
-        "token": TRELLO_TOKEN,
-        "text": message
-    }
-    response = requests.post(url, params=params)
+    
+    # Check message length - if it's very large, split into multiple comments
+    if len(message) > 8000:  # Trello has limits around 10k characters
+        split_comments = split_large_message(message)
+        for i, comment_part in enumerate(split_comments, 1):
+            comment_text = f"[Part {i}/{len(split_comments)}]\n{comment_part}"
+            _post_single_comment(url, comment_text)
+    else:
+        _post_single_comment(url, message)
+
+def _post_single_comment(url, message):
+    """Helper function to post a single comment"""
+    # Check message length - if it's large, use request body instead of query params
+    if len(message) > 1000:  # Threshold for switching to body
+        params = {
+            "key": TRELLO_KEY,
+            "token": TRELLO_TOKEN
+        }
+        data = {
+            "text": message
+        }
+        response = requests.post(url, params=params, data=data)
+    else:
+        # For smaller messages, use query params (more efficient)
+        params = {
+            "key": TRELLO_KEY,
+            "token": TRELLO_TOKEN,
+            "text": message
+        }
+        response = requests.post(url, params=params)
+    
     response.raise_for_status()
+
+def split_large_message(message, max_length=7000):
+    """Split a large message into smaller chunks"""
+    if len(message) <= max_length:
+        return [message]
+    
+    # Try to split on paragraph breaks first
+    paragraphs = message.split('\n\n')
+    chunks = []
+    current_chunk = ""
+    
+    for paragraph in paragraphs:
+        if len(current_chunk) + len(paragraph) + 2 <= max_length:
+            current_chunk += (paragraph + '\n\n')
+        else:
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+            current_chunk = paragraph + '\n\n'
+    
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+    
+    # If still too large, split on sentences
+    if any(len(chunk) > max_length for chunk in chunks):
+        new_chunks = []
+        for chunk in chunks:
+            if len(chunk) <= max_length:
+                new_chunks.append(chunk)
+            else:
+                sentences = chunk.split('. ')
+                current_sentence_chunk = ""
+                for sentence in sentences:
+                    if len(current_sentence_chunk) + len(sentence) + 2 <= max_length:
+                        current_sentence_chunk += sentence + '. '
+                    else:
+                        if current_sentence_chunk:
+                            new_chunks.append(current_sentence_chunk.strip())
+                        current_sentence_chunk = sentence + '. '
+                if current_sentence_chunk:
+                    new_chunks.append(current_sentence_chunk.strip())
+        chunks = new_chunks
+    
+    return chunks
 
 def update_card_description(card_id, new_desc):
     url = f"https://api.trello.com/1/cards/{card_id}"

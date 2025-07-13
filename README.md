@@ -1,6 +1,6 @@
 # 🧠 Trello AI Assistant for Unreal Engine Game Development
 
-This bot integrates with **Trello**, **Slack**, and **Ollama (local LLM)** to automate intelligent task assistance for your **medieval sandbox game built in Unreal Engine**.
+This bot integrates with **Trello**, **Slack**, and **AI models** to automate intelligent task assistance for your **medieval sandbox game built in Unreal Engine**.
 
 ---
 
@@ -11,7 +11,8 @@ This bot integrates with **Trello**, **Slack**, and **Ollama (local LLM)** to au
 ✅ Tags cards with labels like `Dungeon`, `Combat AI`, `UI`, etc.  
 ✅ Posts AI-generated help as Trello comments  
 ✅ Sends a daily summary of active tasks to Slack at 9:30 AM  
-✅ Runs offline using Ollama with test cards and mock Trello data
+✅ Supports both local AI (Ollama) and cloud AI (ChatGPT API)  
+✅ Runs offline using test cards and mock Trello data
 
 ---
 
@@ -22,15 +23,22 @@ This bot integrates with **Trello**, **Slack**, and **Ollama (local LLM)** to au
 ```
 pip install -r requirements.txt
 ```
-Make sure you have ollama pulled and started:
+
+### 🤖 Step 2: Configure AI Provider
+
+Choose between local AI (Ollama) or cloud AI (ChatGPT API):
+
+**Option A: Local AI (Ollama) - Recommended for privacy**
 ```
 ollama run deepseek-r1
 ```
-If needing to sync labels to Trello run:
-```
-python sync_labels.py
-```
-### Step 2: Start the Webhook Server listening to Trello changes:
+
+**Option B: Cloud AI (ChatGPT API) - Better responses**
+Get your API key from https://platform.openai.com/api-keys
+
+See [AI_CONFIGURATION.md](AI_CONFIGURATION.md) for detailed setup instructions.
+
+### Step 3: Start the Webhook Server listening to Trello changes:
 ```
 python app.py
 ```
