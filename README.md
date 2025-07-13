@@ -31,7 +31,8 @@ Choose between local AI (Ollama) or cloud AI (ChatGPT API):
 
 **Option A: Local AI (Ollama) - Recommended for privacy**
 ```
-ollama run deepseek-r1
+set OLLAMA_HOST=0.0.0.0
+ollama serve
 ```
 
 **Option B: Cloud AI (ChatGPT API) - Better responses**
